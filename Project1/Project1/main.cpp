@@ -1,5 +1,6 @@
 #include <cstdio>
 
 int main() {
-	printf("hello github");
+	printf("hello github\n");
+	printf("how are you?\n");
 }
