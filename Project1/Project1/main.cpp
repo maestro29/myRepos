@@ -4,45 +4,39 @@
 using namespace std;
 
 void rotate(vector<vector<int>>& key) {
-    int tmp[20][20];
     int m = key.size();
-
-    for (int i = 0; i < m; i++)
-        for (int j = 0; j < m; j++)
-            tmp[i][j] = key[i][j];
- 
+    vector<vector<int>> tmp(key);
     for (int i = 0; i < m; i++)
         for (int j = 0; j < m; j++)
             key[i][j] = tmp[m - 1 - j][i];
 }
-
 bool solution(vector<vector<int>> key, vector<vector<int>> lock) {
-    bool answer = true;
     int m = key.size(), n = lock.size();
-    int x, y;
-    vector<vector<int>> result(lock);
-    
-    x = y = (-1) * (m + 2);
-    for (x; x < n; x++) {
-        for (y; y < n; y++) {
-            for (int i = 0; i < m; i++) {
-                for (int j = 0; j < m; j++) {
-                    if (x + i >= 0 && y + j >= 0 && x + i < n && y + j < n)
-                        result[x + i][y + j] ^= key[i][j];
-                }asdf
+    int z = 4;
+    while (z--) {
+        for (int x = 1 - m; x < n; x++) {
+            for (int y = 1 - m; y < n; y++) {
+                int sum = 0;
+                vector<vector<int>> combine(lock);
+                for (int i = 0; i < m; i++) {
+                    for (int j = 0; j < m; j++) {
+                        if (x + i >= 0 && y + j >= 0 && x + i < n && y + j < n)
+                            combine[x + i][y + j] = (key[i][j] ^ combine[x + i][y + j]) ? 1 : 0;
+                    }
+                }
+                for (auto i : combine)
+                    for (auto j : i)
+                        sum += j;
+                if (sum == n * n)
+                    return true;
             }
         }
+        rotate(key);
     }
-
-    for (auto i : result)
-        for (auto j : i)
-            if (!j) {
-                answer = false;
-                break;
-            }
-    return answer;
+    return false;
 }
 
 int main() {
-    solution({ { 0,0,0 }, { 1,0,0 }, { 0,1,1 } }, { {1,1,1},{1,1,0},{1,0,1} });
+    bool result = solution({ { 0,0,1},{1,0,0},{1,0,0} }, { {1,1,1,1,1},{1,1,1,1,1},{1,1,0,1,1},{1,1,1,1,1},{1,1,1,0,0} });
+    cout << ((result)? "true" : "false");
 }
