@@ -29,7 +29,7 @@ bool solution(vector<vector<int>> key, vector<vector<int>> lock) {
                 for (int j = 0; j < m; j++) {
                     if (x + i >= 0 && y + j >= 0 && x + i < n && y + j < n)
                         result[x + i][y + j] ^= key[i][j];
-                }
+                }asdf
             }
         }
     }
