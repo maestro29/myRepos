@@ -1,29 +1,48 @@
-#include <cstdio>
-#include <queue>
-#include <tuple>
-#define PUSH(x,y) if (a[x][y]=='0') q.push({x,y,w,v+1}), a[x][y] = '2';\
-				  else if (a[x][y] == '1' && !w) q.push({x,y,w+1,v+1}), a[x][y] = '2';
+#include <string>
+#include <vector>
+#include <iostream>
 using namespace std;
-int n, m, x, y, w, v;
-queue<tuple<int, int, int, int>> q;
-char a[1000][1001];
-int bfs() {
-	PUSH(0, 0);
-	while (q.size()) {
-		tie(x,y,w,v) = q.front();
-		q.pop();
-		if (x == n - 1 && y == m - 1)
-			return v;
-		if (x) PUSH(x - 1, y);
-		if (y) PUSH(x, y - 1);
-		if (x < n - 1) PUSH(x + 1, y);
-		if (y < m - 1) PUSH(x, y + 1);
-	}
-	return -1;
+
+void rotate(vector<vector<int>>& key) {
+    int tmp[20][20];
+    int m = key.size();
+
+    for (int i = 0; i < m; i++)
+        for (int j = 0; j < m; j++)
+            tmp[i][j] = key[i][j];
+ 
+    for (int i = 0; i < m; i++)
+        for (int j = 0; j < m; j++)
+            key[i][j] = tmp[m - 1 - j][i];
 }
+
+bool solution(vector<vector<int>> key, vector<vector<int>> lock) {
+    bool answer = true;
+    int m = key.size(), n = lock.size();
+    int x, y;
+    vector<vector<int>> result(lock);
+    
+    x = y = (-1) * (m + 2);
+    for (x; x < n; x++) {
+        for (y; y < n; y++) {
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < m; j++) {
+                    if (x + i >= 0 && y + j >= 0 && x + i < n && y + j < n)
+                        result[x + i][y + j] ^= key[i][j];
+                }
+            }
+        }
+    }
+
+    for (auto i : result)
+        for (auto j : i)
+            if (!j) {
+                answer = false;
+                break;
+            }
+    return answer;
+}
+
 int main() {
-	scanf("%d%d", &n, &m);
-	for (int i = 0; i < n; i++)
-		scanf("%s", a[i]);
-	printf("%d", bfs());
+    solution({ { 0,0,0 }, { 1,0,0 }, { 0,1,1 } }, { {1,1,1},{1,1,0},{1,0,1} });
 }
