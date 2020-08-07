@@ -1,42 +1,48 @@
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <iostream>
 using namespace std;
 
-void rotate(vector<vector<int>>& key) {
-    int m = key.size();
-    vector<vector<int>> tmp(key);
-    for (int i = 0; i < m; i++)
-        for (int j = 0; j < m; j++)
-            key[i][j] = tmp[m - 1 - j][i];
-}
-bool solution(vector<vector<int>> key, vector<vector<int>> lock) {
-    int m = key.size(), n = lock.size();
-    int z = 4;
-    while (z--) {
-        for (int x = 1 - m; x < n; x++) {
-            for (int y = 1 - m; y < n; y++) {
-                int sum = 0;
-                vector<vector<int>> combine(lock);
-                for (int i = 0; i < m; i++) {
-                    for (int j = 0; j < m; j++) {
-                        if (x + i >= 0 && y + j >= 0 && x + i < n && y + j < n)
-                            combine[x + i][y + j] = (key[i][j] ^ combine[x + i][y + j]) ? 1 : 0;
-                    }
-                }
-                for (auto i : combine)
-                    for (auto j : i)
-                        sum += j;
-                if (sum == n * n)
-                    return true;
-            }
-        }
-        rotate(key);
+struct N {
+    int v;
+    N* n;
+    N() { v = 0, n = NULL; }
+} roota[10001], rootz[10001];
+void push(string s, N* root) {
+    N* cur = &root[s.length()];
+    cur->v++;
+    for (int i = 0; s[i]; i++) {
+        if (!cur->n) cur->n = new N[26];
+        cur = &(cur->n[s[i] - 'a']);
+        cur->v++;
     }
-    return false;
 }
-
+vector<int> solution(vector<string> words, vector<string> queries) {
+    vector<int> answer;
+    for (string s : words) {
+        push(s, roota);
+        reverse(s.begin(), s.end());
+        push(s, rootz);
+    }
+    for (string s : queries) {
+        N* cur;
+        if (s[0] == '?') {
+            cur = &rootz[s.length()];
+            reverse(s.begin(), s.end());
+        }
+        else cur = &roota[s.length()];
+        for (char c : s) {
+            if (c == '?' || !cur->n) {
+                answer.push_back(cur->v);
+                break;
+            }
+            cur = &(cur->n[c - 'a']);
+        }
+    }
+    return answer;
+}
 int main() {
-    bool result = solution({ { 0,0,1},{1,0,0},{1,0,0} }, { {1,1,1,1,1},{1,1,1,1,1},{1,1,0,1,1},{1,1,1,1,1},{1,1,1,0,0} });
-    cout << ((result)? "true" : "false");
+    vector<int> a = solution({ "frodo","front","frost","frozen","frame","kakao" }, { "fro??","????o","fr???","fro???","pro?","fp","?????" });
+    for (auto i : a) cout << i << " ";
 }
