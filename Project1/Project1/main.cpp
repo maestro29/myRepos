@@ -11,13 +11,18 @@ int main() {
 	cin >> t;
 	while (t--) {
 		cin >> n;
-		vector<string>
-			v;
+		vector<string> v;
 		for (int i = 0; i < n; i++) {
 			cin >> x;
 			v.push_back(x);
 		}
 		sort(v.begin(), v.end());
+		bool no = 0;
+		for (int i = 1; i < v.size(); i++)
+			if (v[i - 1] == v[i].substr(0, v[i - 1].length())) {
+				no = 1;
+				break;
+			}
+		cout << ((no)? "NO" : "YES") << "\n";
 	}
-	
 }
