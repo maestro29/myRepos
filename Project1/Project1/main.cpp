@@ -1,28 +1,38 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <algorithm>
-using namespace std;
-int t, n;
-string x;
+#include <cstdio>
+#include <queue>
+#include <stack>
+#define PUSH(z) if (!v[z]) q.push(z), v[z] = 1
+int t, n, k, d[1001], x, y, a[1001][1001], w, v[1001];
+std::queue<int> q;
+std::stack<int> s;
+void sol() {
+	int cur;
+	PUSH(w);
+	while (q.size()) {
+		cur = q.front();
+		q.pop();
+		for (int i = 1; i <= n; i++)
+			if (a[i][cur]) PUSH(i), s.push(i);
+	}
+	while (s.size()) {
+		cur = s.top();
+		s.pop();
+		for (int i = 1; i <= n; i++)
+			if (a[cur][i] && d[i] < d[cur])
+				;
+	}
+}
 int main() {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-	cin >> t;
+	scanf("%d", &t);
 	while (t--) {
-		cin >> n;
-		vector<string> v;
-		for (int i = 0; i < n; i++) {
-			cin >> x;
-			v.push_back(x);
+		scanf("%d%d", &n, &k);
+		for (int i = 1; i <= n; i++)
+			scanf("%d", &d[i]);
+		while (k--) {
+			scanf("%d%d", &x, &y);
+			a[x][y] = 1;
 		}
-		sort(v.begin(), v.end());
-		bool no = 0;
-		for (int i = 1; i < v.size(); i++)
-			if (v[i - 1] == v[i].substr(0, v[i - 1].length())) {
-				no = 1;
-				break;
-			}
-		cout << ((no)? "NO" : "YES") << "\n";
+		scanf("%d", &w);
+		sol();
 	}
 }
