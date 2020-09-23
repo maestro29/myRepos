@@ -1,9 +1,9 @@
 #include <set>
 using namespace std;
-set<int> s[9];
-int nn;
 int solution(int N, int number) {
-    nn = N;
+    set<int> s[9];
+    int nn = N;
+    if (N == number) return 1;
     for (int i = 1; i <= 8; i++) {
         s[i].insert(nn);
         nn = nn * 10 + N;
@@ -25,5 +25,5 @@ int solution(int N, int number) {
     return -1;
 }
 int main() {
-    printf("%d", solution(2, 11));
+    printf("%d", solution(3, 3));
 }
